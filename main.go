@@ -4,6 +4,7 @@ import (
 	"log"
 
 	_ "GO-CRUD/routers"
+	_ "GO-CRUD/models"
 
 	"github.com/beego/beego/v2/server/web"
 )
