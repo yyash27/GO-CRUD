@@ -29,7 +29,7 @@ func (c *AppController) GetAll() {
 			c.CustomAbort(404, "No Student Data Found") //customAbort - support status Code and msg
 			return
 		}
-		c.CustomAbort(500, "Database Error")
+		c.CustomAbort(500, "Database Error : "+ err.Error())
 		return
 	}
 
@@ -49,7 +49,7 @@ func (c *AppController) GetAllStudent() {
 			c.CustomAbort(404, "No Student Data Found")
 			return
 		}
-		c.CustomAbort(500, "Database Error")
+		c.CustomAbort(500, "Database Error : "+ err.Error())
 		return
 	}
 
@@ -70,7 +70,7 @@ func (c *AppController) GetStudent() {
 			c.CustomAbort(404, "No Student Data Found")
 			return
 		}
-		c.CustomAbort(500, "Database Error")
+		c.CustomAbort(500, "Database Error : "+ err.Error())
 		return
 	}
 
@@ -105,6 +105,47 @@ func (c *AppController) CreateStudent() {
 
 	id,_ := res.LastInsertId()
 	c.Data["json"] = id
+	c.ServeJSON()
+}
+
+func (c *AppController) UpdateStudent() {
+	studentId, _ := strconv.Atoi(c.Ctx.Input.Param(":id"))
+	var student models.Student
+
+	requestBody := c.Ctx.Input.RequestBody
+	err := json.Unmarshal(requestBody , &student) 
+
+	if err != nil {
+		c.CustomAbort(400, "Invalid JSON")
+		return
+	}
+
+	o := orm.NewOrm()
+
+	sql := `UPDATE student 
+		   SET name = ?, address = ?, class = ?, school = ?
+		   WHERE id = ?`
+	
+	res , err := o.Raw(sql, student.Name , student.Address , student.Class , student.StudentSchool, studentId).Exec()
+
+	if err != nil {
+		c.CustomAbort(500, "Database Error : "+ err.Error())
+		return
+	}
+
+	//confirm the update
+	_, rowsErr := res.RowsAffected()
+
+	if rowsErr != nil {
+		c.CustomAbort(404, "Student not found in DB")
+		return
+	}
+
+	c.Data["json"] = map[string]interface{}{
+		"message" : "Student Updated Successfully",
+		"id" : studentId,
+	}
+
 	c.ServeJSON()
 }
 

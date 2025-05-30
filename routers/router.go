@@ -12,6 +12,7 @@ func init() {
 	web.Router("/students", &controllers.AppController{}, "get:GetAllStudent")
 	web.Router("/students/:id", &controllers.AppController{}, "get:GetStudent")
 	web.Router("/student", &controllers.AppController{}, "post:CreateStudent")
+	web.Router("/student/:id", &controllers.AppController{}, "post:UpdateStudent")
 
 	// web.Router("/students", &controllers.StudentController{}, "post:Post")
 	// web.Router("/students", &controllers.StudentController{}, "get:GetAll")
