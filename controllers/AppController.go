@@ -113,7 +113,7 @@ func (c *AppController) UpdateStudent() {
 	var student models.Student
 
 	requestBody := c.Ctx.Input.RequestBody
-	err := json.Unmarshal(requestBody , &student) 
+	err := json.Unmarshal(requestBody , &student) //standard function to decode json data into a Go variable.
 
 	if err != nil {
 		c.CustomAbort(400, "Invalid JSON")
@@ -143,6 +143,36 @@ func (c *AppController) UpdateStudent() {
 
 	c.Data["json"] = map[string]interface{}{
 		"message" : "Student Updated Successfully",
+		"id" : studentId,
+	}
+
+	c.ServeJSON()
+}
+
+func (c *AppController) DeleteStudent() {
+	studentId, _ := strconv.Atoi(c.Ctx.Input.Param(":id"))
+
+	o := orm.NewOrm()
+
+	sql := "DELETE FROM student WHERE id = ?"
+
+	res , err := o.Raw(sql, studentId).Exec()
+
+	if err != nil {
+		c.CustomAbort(500, "Database Error : "+ err.Error())
+		return
+	}
+
+	//confirm Delete
+	_,rowsErr := res.RowsAffected()
+
+	if rowsErr != nil {
+		c.CustomAbort(400 , "Student not found in DB")
+		return
+	}
+
+	c.Data["json"]= map[string]interface{}{
+		"message" : "Student Deleted Successfully",
 		"id" : studentId,
 	}
 

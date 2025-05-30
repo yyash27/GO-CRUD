@@ -13,9 +13,9 @@ func init() {
 	web.Router("/students/:id", &controllers.AppController{}, "get:GetStudent")
 	web.Router("/student", &controllers.AppController{}, "post:CreateStudent")
 	web.Router("/student/:id", &controllers.AppController{}, "post:UpdateStudent")
-
+	web.Router("/student/:id", &controllers.AppController{}, "delete:DeleteStudent")
 	// web.Router("/students", &controllers.StudentController{}, "post:Post")
 	// web.Router("/students", &controllers.StudentController{}, "get:GetAll")
 	// web.Router("/students/:id", &controllers.StudentController{}, "put:Put")
-	// web.Router("/students/:id", &controllers.StudentController{}, "delete:Delete")
+	
 }
