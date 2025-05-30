@@ -8,11 +8,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type Demo struct {
-	Id int `json:"id" orm:"auto"`
-	Name string `json:"name"`
-}
-
 func init() {
 	dbDriver := "mysql"
 	dbHost :="127.0.0.1"
@@ -40,6 +35,6 @@ func init() {
 			fmt.Println("✅ Database connected successfully.")
 		}
 	}
-	// orm.RegisterModel(new(Demo))
-	// orm.RunSyncdb("default", false, true)
+
+	orm.RunSyncdb("default", false, true)
 }
